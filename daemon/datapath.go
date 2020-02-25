@@ -1,4 +1,4 @@
-// Copyright 2016-2019 Authors of Cilium
+// Copyright 2016-2020 Authors of Cilium
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import (
 	"github.com/cilium/cilium/pkg/datapath"
 	datapathIpcache "github.com/cilium/cilium/pkg/datapath/ipcache"
 	"github.com/cilium/cilium/pkg/datapath/linux/ipsec"
+	"github.com/cilium/cilium/pkg/datapath/linux/probes"
 	"github.com/cilium/cilium/pkg/datapath/prefilter"
 	"github.com/cilium/cilium/pkg/endpointmanager"
 	"github.com/cilium/cilium/pkg/identity"
@@ -334,8 +335,12 @@ func (d *Daemon) initMaps() error {
 		return err
 	}
 
+	pm := probes.NewProbeManager()
+	supportedMapTypes := pm.GetMapTypes()
+	createSockRevNatMaps := option.Config.EnableHostReachableServices &&
+		option.Config.EnableHostServicesUDP && supportedMapTypes.HaveLruHashMapType
 	if err := d.svc.InitMaps(option.Config.EnableIPv6, option.Config.EnableIPv4,
-		option.Config.RestoreState); err != nil {
+		option.Config.RestoreState, createSockRevNatMaps); err != nil {
 		log.WithError(err).Fatal("Unable to initialize service maps")
 	}
 
