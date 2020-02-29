@@ -362,6 +362,11 @@ Removed helm options
 ~~~~~~~~~~~~~~~~~~~~
 * ``operator.synchronizeK8sNodes``: was removed and replaced with ``global.synchronizeK8sNodes``
 
+Deprecated BPF maps
+~~~~~~~~~~~~~~~~~~~
+* The ``cilium_tunnel_map`` has been deprecated and the IPcache is used for all
+  enapsulation mapping. The command ``cilium bpf tunnel list`` has been removed.
+
 .. _1.7_upgrade_notes:
 
 1.7 Upgrade Notes
