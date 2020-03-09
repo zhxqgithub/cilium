@@ -262,7 +262,7 @@ var _ = Describe("NightlyEpsMeasurement", func() {
 
 			netcatPods, err := kubectl.GetPodNames(helpers.DefaultNamespace, "zgroup=netcatds")
 			Expect(err).To(BeNil(), "Cannot get pods names for netcatds")
-			Expect(len(netcatPods)).To(BeNumerically(">", 0), "Pods are not ready")
+			Expect(len(netcatPods)).To(BeNumerically(">=", 2), "Pods are not ready")
 
 			server := netcatPods[0]
 			client := netcatPods[1]
